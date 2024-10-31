@@ -28,6 +28,9 @@ class FinanceController:
                 total_expense += trans[1]
                 
         budget = self.model.get_budget_db()
+        
+        if total_expense > budget:
+            self.view.display_message("Cảnh báo", "Chi tiêu đã vượt quá ngân sách!")
 
         self.view.clear_input()
         self.view.update_transaction_view(transactions)
