@@ -18,8 +18,8 @@ class FinanceView(tk.Tk):
     # Hàm thiết lập giao diện
     def setup_gui(self):
         # Thiết lập kích thước cửa sổ
-        window_width = 600
-        window_height = 700
+        window_width = 635
+        window_height = 600
         
         # Lấy kích thước màn hình
         screen_width = self.winfo_screenwidth()
@@ -32,8 +32,17 @@ class FinanceView(tk.Tk):
         # Thiết lập vị trí của cửa sổ chính giữa màn hình
         self.geometry(f"{window_width}x{window_height}+{center_x}+{center_y}")
         
+        # Thiết lập icon cho cửa sổ
+        icon_path = "us.png"
+        icon_image = tk.PhotoImage(file=icon_path)
+        self.iconphoto(True, icon_image)
+        
+        # Khóa kích thước cửa sổ
+        self.resizable(False, False)
+        
+        
         # Thiết lập ảnh nền cho cửa sổ
-        background_path = "bg.jpg"
+        background_path = "bg2.jpg"
         bg_image = Image.open(background_path)
         bg_image = bg_image.resize((window_width, window_height), Image.LANCZOS)
         bg_photo = ImageTk.PhotoImage(bg_image)
@@ -41,88 +50,78 @@ class FinanceView(tk.Tk):
         bg_label.image = bg_photo
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
         
-        # Thiết lập icon cho cửa sổ
-        icon_path = "us.png"
-        icon_image = tk.PhotoImage(file=icon_path)
-        self.iconphoto(True, icon_image)
-        
         
         # Thiết lập giao diện đầu vào
-        self.frame_input = tk.Frame(self, padx=10, pady=10, bg="#184A89")
-        self.frame_input.pack(fill="x")
         
-        tk.Label(self.frame_input, text="Số tiền:").grid(row=0, column=0, padx=5, pady=5)
-        self.entry_amount = tk.Entry(self.frame_input, width=20)
-        self.entry_amount.grid(row=0, column=1, padx=5, pady=5)
+        tk.Label(self, text="Số tiền:", bg="#E2EFF7", font=("Times New Roman", 10, "bold")).place(x=10, y=10)
+        self.entry_amount = tk.Entry(self, width=20)
+        self.entry_amount.place(x=80, y=10)
         
-        tk.Label(self.frame_input, text="Loại:").grid(row=1, column=0, padx=5, pady=5)
+        tk.Label(self, text="Ngày:", bg="#B9DFF6", font=("Times New Roman", 10, "bold")).place(x=300, y=10)
+        self.entry_date = DateEntry(self, width=18, background="lightblue", foreground="white", date_pattern='yyyy-MM-dd')
+        self.entry_date.place(x=380, y=10)
+        
+        tk.Label(self, text="Loại:", bg="#DFF0F7", font=("Times New Roman", 10, "bold")).place(x=10, y=50)
         self.var_type = tk.StringVar(value="Thu nhập")
-        tk.Radiobutton(self.frame_input, text="Thu nhập", variable=self.var_type, value="Thu nhập", command=self.update_category_options).grid(row=1, column=1, padx=5, pady=5)
-        tk.Radiobutton(self.frame_input, text="Chi tiêu", variable=self.var_type, value="Chi tiêu", command=self.update_category_options).grid(row=1, column=2, padx=5, pady=5)
+        tk.Radiobutton(self, text="Thu nhập", variable=self.var_type, value="Thu nhập", command=self.update_category_options, bg="#CDE9F7", font=("Times New Roman", 9, "italic")).place(x=80, y=50)
+        tk.Radiobutton(self, text="Chi tiêu", variable=self.var_type, value="Chi tiêu", command=self.update_category_options, bg="#BEE3F6", font=("Times New Roman", 9, "italic")).place(x=180, y=50)
         
-        tk.Label(self.frame_input, text="Danh mục:").grid(row=2, column=0, padx=5, pady=5)
-        self.category_combobox = ttk.Combobox(self.frame_input, width=18)
-        self.category_combobox.grid(row=2, column=1, columnspan=2, padx=5, pady=5)
+        tk.Label(self, text="Danh mục:", bg="#B4DEF4", font=("Times New Roman", 10, "bold")).place(x=300, y=50)
+        self.category_combobox = ttk.Combobox(self, width=18)
+        self.category_combobox.place(x=380, y=50)
         self.update_category_options()
 
-        tk.Label(self.frame_input, text="Mô tả:").grid(row=3, column=0, padx=5, pady=5)
-        self.entry_description = tk.Entry(self.frame_input, width=30)
-        self.entry_description.grid(row=3, column=1, columnspan=2, padx=5, pady=5)
-
-        tk.Label(self.frame_input, text="Ngày:").grid(row=0, column=3, padx=5, pady=5)
-        self.entry_date = DateEntry(self.frame_input, width=16, background="lightblue", foreground="white", date_pattern='yyyy-MM-dd')
-        self.entry_date.grid(row=0, column=4, columnspan=2, padx=5, pady=5)
+        tk.Label(self, text="Mô tả:", bg="#E0EEF9", font=("Times New Roman", 10, "bold")).place(x=10, y=90)
+        self.entry_description = tk.Entry(self, width=50)
+        self.entry_description.place(x=80, y=90)
 
 
         # Nút thêm, sửa, xóa giao dịch và cập nhật ngân sách
-        self.frame_actions = tk.Frame(self, padx=10, pady=10, bg="#184A89")
-        self.frame_actions.pack(fill="x")
+        tk.Label(self, text="Ngân sách:", bg="#C6E5F9", font=("Times New Roman", 10, "bold")).place(x=170, y=130)
+        self.entry_budget = tk.Entry(self, width=20)
+        self.entry_budget.place(x=250, y=130)
+        self.btn_set_budget = tk.Button(self, text="Đặt ngân sách", font=("Times New Roman", 10, "bold"), bg="#98FB98", activebackground="#2F4F4F", activeforeground="#FFFFFF")
+        self.btn_set_budget.place(x=390, y=130)
         
-        self.btn_add = tk.Button(self.frame_actions, text="Thêm giao dịch")
-        self.btn_add.grid(row=0, column=0, padx=60)
+        self.btn_add = tk.Button(self, text="Thêm giao dịch", font=("Times New Roman", 10, "bold"), bg="#B0E0E6", activebackground="#2F4F4F", activeforeground="#FFFFFF")
+        self.btn_add.place(x=120, y=170)
         
-        self.btn_edit = tk.Button(self.frame_actions, text="Sửa giao dịch")
-        self.btn_edit.grid(row=0, column=1, padx=30)
+        self.btn_edit = tk.Button(self, text="Sửa giao dịch", font=("Times New Roman", 10, "bold"), bg="#F5DEB3", activebackground="#2F4F4F", activeforeground="#FFFFFF")
+        self.btn_edit.place(x=270, y=170)
         
-        self.btn_delete = tk.Button(self.frame_actions, text="Xóa giao dịch")
-        self.btn_delete.grid(row=0, column=2, padx=60)
+        self.btn_delete = tk.Button(self, text="Xóa giao dịch", font=("Times New Roman", 10, "bold"), bg="#CD5C5C", activebackground="#2F4F4F", activeforeground="#FFFFFF")
+        self.btn_delete.place(x=410, y=170)
         
-        tk.Label(self.frame_actions, text="Ngân sách:").grid(row=1, column=0)
-        self.entry_budget = tk.Entry(self.frame_actions)
-        self.entry_budget.grid(row=1, column=1)
-        self.btn_set_budget = tk.Button(self.frame_actions, text="Đặt ngân sách")
-        self.btn_set_budget.grid(row=1, column=2)
 
 
         # Bảng hiển thị giao dịch
         columns = ("ID", "Số tiền", "Loại", "Danh mục", "Mô tả", "Ngày")
         self.tree = ttk.Treeview(self, columns=columns, show="headings", height=8)
-        self.tree.column("ID", width=30)
-        self.tree.column("Số tiền", width=100)
-        self.tree.column("Loại", width=80)
-        self.tree.column("Danh mục", width=100)
-        self.tree.column("Mô tả", width=150)
-        self.tree.column("Ngày", width=100)
+        self.tree.column("ID", width=30, anchor="center")
+        self.tree.column("Số tiền", width=100, anchor="center")
+        self.tree.column("Loại", width=80, anchor="center")
+        self.tree.column("Danh mục", width=100, anchor="center")
+        self.tree.column("Mô tả", width=150, anchor="center")
+        self.tree.column("Ngày", width=100, anchor="center")
         for col in columns:
-            self.tree.heading(col, text=col)
-        self.tree.pack(pady=10)
+            self.tree.heading(col, text=col, anchor="center")
+        self.tree.place(x=10, y=210, width=615, height=200)
 
-    
-        
+
         # Hiển thị thông tin tài chính
-        self.lbl_income = tk.Label(self, text="Thu nhập: 0")
-        self.lbl_expense = tk.Label(self, text="Chi tiêu: 0")
-        self.lbl_balance = tk.Label(self, text="Số dư: 0")
-        self.lbl_budget = tk.Label(self, text="Ngân sách: 0")
-        self.lbl_income.pack()
-        self.lbl_expense.pack()
-        self.lbl_balance.pack()
-        self.lbl_budget.pack()
+        self.lbl_income = tk.Label(self, text="Thu nhập: 0", font=("Times New Roman", 10, "bold"), bg="#EDF3F7")
+        self.lbl_expense = tk.Label(self, text="Chi tiêu: 0", font=("Times New Roman", 10, "bold"), bg="#F3F9FE")
+        self.lbl_balance = tk.Label(self, text="Số dư: 0", font=("Times New Roman", 10, "bold"), bg="#EEF6FC")
+        self.lbl_budget = tk.Label(self, text="Ngân sách: 0", font=("Times New Roman", 10, "bold"), bg="#EBF0F5")
+        self.lbl_income.place(x=20, y=420)
+        self.lbl_expense.place(x=170, y=420)
+        self.lbl_balance.place(x=350, y=420)
+        self.lbl_budget.place(x=510, y=420)
         
 
         # Nút phân tích biểu đồ
-        self.btn_chart = tk.Button(self, text="Phân tích biểu đồ")
-        self.btn_chart.pack(pady=10)
+        self.btn_chart = tk.Button(self, text="Phân tích biểu đồ", font=("Times New Roman", 10, "bold"), bg="#87CEFA", activebackground="#2F4F4F", activeforeground="#FFFFFF")
+        self.btn_chart.place(x=210, y=460, width=200)
 
 
     # Hàm lấy dữ liệu giao dịch
@@ -198,7 +197,6 @@ class FinanceView(tk.Tk):
     def get_selected_transaction(self):
         selected_item = self.tree.selection()
         if not selected_item:
-            self.display_error("Lỗi", "Vui lòng chọn một giao dịch!")
             return None
         return self.tree.item(selected_item, "values")       
     
