@@ -87,6 +87,9 @@ class FinanceView(tk.Tk):
         
         self.btn_register = tk.Button(self.login_frame, text="Đăng ký", font=("Times New Roman", 12, "bold"), bg="#7ED957", activebackground="#2F4F4F", activeforeground="#FFFFFF")
         self.btn_register.place(x=330, y=350) 
+        
+        self.btn_register_premium = tk.Button(self.login_frame, text="Đăng ký Premium", font=("Times New Roman", 12, "bold"), bg="#FFD900", activebackground="#2F4F4F", activeforeground="#FFFFFF")
+        self.btn_register_premium.place(x=250, y=400)
               
     # Hàm thiết lập giao diện chính của ứng dụng
     def create_application_view(self):
@@ -110,6 +113,12 @@ class FinanceView(tk.Tk):
         self.lbl_icon_username = tk.Label(self.app_frame, image=self.icon_user, bg="#68869A").place(x=20, y=10)
         self.lbl_username = tk.Label(self.app_frame, text="", font=("Times New Roman", 13, "bold"), bg="#68869A", fg="#FFFBF0")
         self.lbl_username.place(x=60, y=15)
+        
+        # Thiết lập biểu tượng premium
+        img_premium = Image.open("img\\premium.png").resize((30, 30), Image.LANCZOS)
+        self.icon_premium = ImageTk.PhotoImage(img_premium)  # Keep a reference to avoid garbage collection
+        self.lbl_premium = tk.Label(self.app_frame, image=self.icon_premium, bg="#68869A")
+        self.lbl_premium.place(x=300, y=10)
         
         # Nút đăng xuất
         self.btn_logout = tk.Button(self.app_frame, text="Đăng xuất", font=("Times New Roman", 10, "bold"), bg="#FF3131", activebackground="#2F4F4F", activeforeground="#FFFFFF")
@@ -141,7 +150,8 @@ class FinanceView(tk.Tk):
 
 
         # Nút thêm, sửa, xóa giao dịch và cập nhật ngân sách
-        tk.Label(self.app_frame, text="Ngân sách:", bg="#FFFBF0", font=("Times New Roman", 10, "bold")).place(x=170, y=180)
+        self.lbl_budget_inp = tk.Label(self.app_frame, text="Ngân sách:", bg="#FFFBF0", font=("Times New Roman", 10, "bold"))
+        self.lbl_budget_inp.place(x=170, y=180)
         self.entry_budget = tk.Entry(self.app_frame, width=20)
         self.entry_budget.place(x=250, y=180)
         self.btn_set_budget = tk.Button(self.app_frame, text="Đặt ngân sách", font=("Times New Roman", 10, "bold"), bg="#7ED957", activebackground="#2F4F4F", activeforeground="#FFFFFF")
@@ -181,12 +191,27 @@ class FinanceView(tk.Tk):
         self.lbl_expense.place(x=170, y=470)
         self.lbl_balance.place(x=350, y=470)
         self.lbl_budget.place(x=510, y=470)
-        
 
         # Nút phân tích biểu đồ
         self.btn_chart = tk.Button(self.app_frame, text="Thống kê tài chính", font=("Times New Roman", 10, "bold"), bg="#00BB61", activebackground="#2F4F4F", activeforeground="#FFFFFF")
         self.btn_chart.place(x=210, y=510, width=200)
 
+    def hide_premium_features(self):
+        self.lbl_budget_inp.place_forget()
+        self.entry_budget.place_forget()
+        self.btn_set_budget.place_forget()
+        self.lbl_premium.place_forget()
+        self.lbl_budget.place_forget()
+        self.btn_chart.place_forget()
+            
+    def show_premium_features(self):
+        self.lbl_budget_inp.place(x=170, y=180)
+        self.entry_budget.place(x=250, y=180)
+        self.btn_set_budget.place(x=390, y=180)
+        self.lbl_premium.place(x=300, y=10)
+        self.lbl_budget.place(x=510, y=470)
+        self.btn_chart.place(x=210, y=510, width=200)
+        
 
 # Phương thức chung
     # Chuyển sang gía diện đăng nhập
@@ -228,7 +253,7 @@ class FinanceView(tk.Tk):
 
     # Hàm lấy dữ liệu giao dịch
     def get_data_input(self):
-        amount = self.entry_amount.get()
+        amount = int(self.entry_amount.get())
         transaction_type = self.var_type.get()
         category = self.category_combobox.get()
         description = self.entry_description.get()
@@ -248,7 +273,7 @@ class FinanceView(tk.Tk):
     # Hàm cập nhật danh mục dựa trên loại giao dịch
     def update_category_options(self):
         if self.var_type.get() == "Thu nhập":
-            self.category_combobox.config(values=["Tiền lương", "Thưởng", "Part-time", "Khác"])
+            self.category_combobox.config(values=["Tiền lương", "Thưởng", "Part-time", "Đầu tư", "Khác"])
         else:
             self.category_combobox.config(values=["Ăn uống", "Mua sắm", "Xăng", "Sức khỏe", "Giải trí", "Du lịch", "Khác"])
     
